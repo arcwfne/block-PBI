@@ -1,0 +1,28 @@
+2
+
+SELECT
+    t.ID_client,
+    COUNT(DISTINCT t.Id_check) AS unique_feeds
+FROM transactions t
+JOIN customer_info_final c ON t.ID_client = c.Id_client
+WHERE t.date_new BETWEEN '2022-08-01' AND '2022-08-15'
+  AND t.Count_products >= 2
+  AND t.Id_check NOT IN (
+      SELECT Id_check
+      FROM transactions
+      WHERE t.Sum_payment > 0 AND t.Count_products > 0)
+GROUP BY t.ID_client
+HAVING unique_feeds >= 2
+
+
+3
+
+SELECT
+ t.Id_check,COUNT(t.Id_check) AS product_count
+FROM transactions t
+JOIN customer_info_final c ON t.ID_client = c.Id_client
+WHERE t.date_new BETWEEN '2022-08-15' AND '2022-08-30'
+  AND c.Count_city = 'СПб'
+GROUP BY t.Id_check
+ORDER BY product_count DESC
+LIMIT 5;
